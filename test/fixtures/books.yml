@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  sales_enqueued_at: 2021-04-18 13:15:05
+  sales_calculated_at: 2021-04-18 13:15:05
+  crunching_sales: false
+
+two:
+  title: MyString
+  description: MyText
+  sales_enqueued_at: 2021-04-18 13:15:05
+  sales_calculated_at: 2021-04-18 13:15:05
+  crunching_sales: false

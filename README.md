@@ -34,7 +34,7 @@ First, create a book in the Rails console to play around with:
 Book.create(title: "The Street Photographer's Manual", sales_calculated_at: Time.now, sales_enqueued_at: 15.minutes.ago)
 ```
 
-1. One Flag approach
+### 1. One Flag approach
 
 You can try to schedule the `BookSalesWorker` 100 times with:
 
@@ -52,7 +52,7 @@ Also, there's an example with the boolean flag (`crunching_sales`) instead of us
 
 The job should be executed only once.
 
-2. Two Flag Approach
+### 2. Two Flag Approach
 
 ```rb
 100.times { BookSalesService.schedule_with_two_flags(Book.last) }
@@ -62,7 +62,7 @@ The example will utilize two flags - `sales_calculated_at` and
 `sales_enqueued_at` to figure out whether to schedule jobs or not. In the
 end, only one job should perform.
 
-3. Traverse Sidekiq Queue Approach
+### 3. Traverse Sidekiq Queue Approach
 
 ```rb
 100.times { BookSalesService.schedule_unique_across_queue(Book.last) }

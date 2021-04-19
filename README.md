@@ -72,6 +72,18 @@ This approach will schedule 10 jobs at first, until the queue fills up. Then,
 it will skip other jobs. If you have an idea how to improve this example,
 please, submit a PR and let's make it better.
 
+### 4. Using sidekiq-unique-jobs gem
+
+Try running:
+
+```rb
+5.times { UniqueBookSalesWorker.perform_async(Book.last.id) }
+```
+
+Open http://localhost:3000/sidekiq and you should see couple of jobs in the
+dead queue. Enter it and you will see the `UniqueBookSalesWorker` jobs that
+got rejected because the same job was running.
+
 ## Contributing
 
 All the files are inside `app/workers` and `app/services/book_sales_service.rb`
@@ -81,4 +93,4 @@ submit a PR that describes the approach.
 ## Future plans
 
 - [ ] Cover with tests
-- [ ] Add sidekiq-unique-jobs gem example
+- [x] Add sidekiq-unique-jobs gem example

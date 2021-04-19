@@ -1,24 +1,84 @@
-# README
+# duplicate-sidekiq-jobs
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The whole app is built to paint some examples for the Sidekiq Duplicate Jobs
+blog post. You can read it [right here](TODO) (it is not yet published,
+sorry, I will update this as soon as it is out)
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
+```bash
+$ bundle install
+$ bin/rails db:setup
+$ bin/rails db:migrate
+```
 
-* System dependencies
+## Running
 
-* Configuration
+To get the Sidekiq Web locally on http://localhost:3000/sidekiq, run:
 
-* Database creation
+```bash
+$ bin/rails server
+```
 
-* Database initialization
+Run Sidekiq process with:
 
-* How to run the test suite
+```bash
+$ bundle exec sidekiq
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Test out DIY solutions for running unique jobs
 
-* Deployment instructions
+First, create a book in the Rails console to play around with:
 
-* ...
+```rb
+Book.create(title: "The Street Photographer's Manual", sales_calculated_at: Time.now, sales_enqueued_at: 15.minutes.ago)
+```
+
+1. One Flag approach
+
+You can try to schedule the `BookSalesWorker` 100 times with:
+
+```rb
+100.times { BookSalesService.schedule_with_one_flag(Book.last) }
+```
+
+Try checking the Sidekiq log and the job should run only once.
+
+Also, there's an example with the boolean flag (`crunching_sales`) instead of using `sales_enqueued_at`. You can run that example with:
+
+```rb
+100.times { BookSalesService.schedule_with_one_boolean_flag(Book.last) }
+```
+
+The job should be executed only once.
+
+2. Two Flag Approach
+
+```rb
+100.times { BookSalesService.schedule_with_two_flags(Book.last) }
+```
+
+The example will utilize two flags - `sales_calculated_at` and
+`sales_enqueued_at` to figure out whether to schedule jobs or not. In the
+end, only one job should perform.
+
+3. Traverse Sidekiq Queue Approach
+
+```rb
+100.times { BookSalesService.schedule_unique_across_queue(Book.last) }
+```
+
+This approach will schedule 10 jobs at first, until the queue fills up. Then,
+it will skip other jobs. If you have an idea how to improve this example,
+please, submit a PR and let's make it better.
+
+## Contributing
+
+All the files are inside `app/workers` and `app/services/book_sales_service.rb`
+that are used to illustrate how to avoid duplicate jobs. If you have more ideas, please,
+submit a PR that describes the approach.
+
+## Future plans
+
+- [ ] Cover with tests
+- [ ] Add sidekiq-unique-jobs gem example

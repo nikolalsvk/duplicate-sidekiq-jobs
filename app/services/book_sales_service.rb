@@ -30,7 +30,7 @@ module BookSalesService
 
     queue.each do |job|
       return if job.klass == BookSalesWorker.to_s &&
-        job.args.join('') == book.id.to_s
+        job.args == [book.id]
     end
 
     BookSalesWorker.perform_async(book.id)

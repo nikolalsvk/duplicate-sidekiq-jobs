@@ -1,8 +1,7 @@
 # duplicate-sidekiq-jobs
 
 The whole app is built to paint some examples for the Sidekiq Duplicate Jobs
-blog post. You can read it [right here](TODO) (it is not yet published,
-sorry, I will update this as soon as it is out)
+blog post. You can read it [right here](https://blog.appsignal.com/2021/05/12/three-ways-to-avoid-duplicate-sidekiq-jobs.html).
 
 ## Setup
 
